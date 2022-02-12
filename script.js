@@ -7,14 +7,14 @@ function computerPlay() {
 
 // choose a piece based on player input
 function playerPlay() {
-    // ask player what piece to play
-    let input = prompt("Rock, paper or scissors?").toLowerCase();
-    
-    // keep asking for input if player gives non-existent input
-    let index = pieces.findIndex(piece => piece.toLowerCase() === input) 
-    while (index < 0) {
+    // keep prompting player while input is invalid
+    do {
+        // prompt player to type their selection
         input = prompt("Rock, paper or scissors?").toLowerCase();
-    }
+
+        // check if player input is valid
+        index = pieces.findIndex(piece => piece.toLowerCase() === input) 
+    } while (index < 0) // index < 0 means that player input isn't found
     
     return pieces[index];
 }
@@ -36,10 +36,8 @@ function playRound(playerSelection, computerSelection) {
     }
 
     // player loses the round
-    else {
-        console.log(`You lose! ${computerSelection} beats ${playerSelection}`);
-        return "computer";
-    }
+    console.log(`You lose! ${computerSelection} beats ${playerSelection}`);
+    return "computer";
 }
 
 function play() {
