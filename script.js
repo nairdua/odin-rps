@@ -5,75 +5,81 @@ function computerPlay() {
     return pieces[Math.floor(Math.random() * pieces.length)];
 }
 
-// choose a piece based on player input
-function playerPlay() {
-    // keep prompting player while input is invalid
-    do {
-        // prompt player to type their selection
-        input = prompt("Rock, paper or scissors?").toLowerCase();
+// process round after player picks a piece
+// returns round summary with both player's picks
+function processRound(playerSelection) {
+    const computerSelection = computerPlay().toLowerCase(); // let cpu play
 
-        // check if player input is valid
-        index = pieces.findIndex(piece => piece.toLowerCase() === input) 
-    } while (index < 0) // index < 0 means that player input isn't found
-    
-    return pieces[index];
-}
-
-// evaluate round winner. Returns name of round winner ('player', 'computer')
-function playRound(playerSelection, computerSelection) {
     // player draws
     if (playerSelection === computerSelection) {
-        console.log(`Draw! Both players selected ${playerSelection}`);
-        return "draw";
+        return `Draw! Both players selected ${playerSelection}`;
     }
 
     // player wins the round
     if ((playerSelection === "rock" && computerSelection === "scissors") ||
         (playerSelection === "paper" && computerSelection === "rock") ||
         (playerSelection === "scissors" && computerSelection === "paper")) {
-        console.log(`You win! ${playerSelection} beats ${computerSelection}`);
-        return "player";
+        playerScore++;
+        return `You win! ${playerSelection} beats ${computerSelection}`;
     }
 
     // player loses the round
-    console.log(`You lose! ${computerSelection} beats ${playerSelection}`);
-    return "computer";
+    computerScore++;
+    return `You lose! ${computerSelection} beats ${playerSelection}`;
 }
 
-function play() {
-    // initialize player and cpu score
-    let playerScore = 0;
-    let computerScore = 0;
+// takes a string, returns it as a <p>
+// used to append round results to its container
+function stringToParagraph(string) {
+    const paragraph = document.createElement('p');
+    paragraph.textContent = string;
+    return paragraph;
+}
 
-    // play for 5 rounds
-    for (let i = 0; i < 5; i++) {
-        // show current scores
-        console.log(`Player: ${playerScore} CPU: ${computerScore}`)
+// changes the result text to the specified string
+function updateScore(string) {
+    results.textContent = string;
+}
 
-        // let both players choose
-        let computerSelection = computerPlay().toLowerCase();
-        let playerSelection = playerPlay().toLowerCase();
-        
-        // determine round winner
-        let winner = playRound(playerSelection, computerSelection);
-        if (winner === 'player') {
-            playerScore++;
-        } else if (winner === 'computer') {
-            computerScore++;
-        }
-    }
+// handle game end
+function finishGame() {
+    // disable the buttons
+    buttons.forEach(button => button.disabled = true);
 
-    // show final score
-    console.log(`Player: ${playerScore} CPU: ${computerScore}`);
+    results.appendChild(stringToParagraph("GAME OVER!"));
 
-    // determine overall winner
+    // declare overall winner
     if (playerScore > computerScore) {
-        console.log("You win!");
+        results.appendChild(stringToParagraph("You win!"));
     } else if (playerScore < computerScore) {
-        console.log("You lose!");
+        results.appendChild(stringToParagraph("You lose!"));
     } else {
-        console.log("Tie!")
+        results.appendChild("It's a draw!");
     }
 }
 
-play();
+// process round play
+function playRound(playerSelection) {
+    const roundResult = stringToParagraph(processRound(playerSelection));
+
+    results.appendChild(roundResult);
+    scoreboard.textContent = `YOU ${playerScore} - ${computerScore} CPU`;
+
+    // end game if a player reaches 5 points
+    if (playerScore === 5 || computerScore === 5) {
+        finishGame();
+    }
+}
+
+let playerScore = 0;
+let computerScore = 0;
+
+const buttons = document.querySelectorAll('button');
+const scoreboard = document.querySelector('.scoreboard')
+const results = document.querySelector('.results');
+
+buttons.forEach(button => button.addEventListener('click', function() {
+        const playerSelection = button.textContent.toLowerCase();
+        playRound(playerSelection);
+    })
+);

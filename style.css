@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+    color: #282828;
+}
+
+.container {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    gap: 10px;
+}
+
+.scoreboard {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 8px;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 36pt;
+}
+
+.results {
+    border: 1px solid gray;
+    min-height: 30vw;
+    max-height: 30vw;
+    min-width: 50vw;
+    padding: 0 1rem;
+    overflow: auto;
+}
+
+.results p {
+    font-size: 12pt;
+    line-height: 50%;
+}
+
+.buttons {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 8px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.buttons .btn {
+    font-size: 18pt;
+    color: #282828;
+}
